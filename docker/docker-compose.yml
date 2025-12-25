@@ -1,0 +1,24 @@
+services:
+  frontend:
+    image: nginx:alpine
+    container_name: plant-todo-frontend
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "3000:80"
+    networks:
+      - plant-todo-network
+
+  backend:
+    build: ./backend
+    container_name: plant-todo-backend
+    volumes:
+      - ./backend/data:/app/data
+    restart: always
+    networks:
+      - plant-todo-network
+
+networks:
+  plant-todo-network:
+    driver: bridge
