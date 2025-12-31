@@ -17,10 +17,25 @@ export interface Todo {
   zIndex: number;
   color: string;
   isConverted: boolean;
+  isRecurring?: boolean; // Is this an auto-generated task?
+  dueDate?: number; // Timestamp for overdue calculation
 }
 
 export type PlantStage = 'seedling' | 'sprout' | 'young' | 'mature' | 'blooming';
 export type ScreenEffectType = 'none' | 'light-snow' | 'heavy-snow' | 'light-rain' | 'heavy-rain' | 'sakura';
+export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly';
+
+export interface RecurringRule {
+  id: string;
+  title: string;
+  subTasks: string[]; // Template texts
+  frequency: RecurrenceFrequency;
+  time: string; // "HH:MM"
+  daysOfWeek?: number[]; // 0-6, where 1 is Mon
+  dayOfMonth?: number; // 1-31
+  color: string;
+  lastGenerated: number; // Timestamp of last generation to prevent duplicates
+}
 
 export interface PlantType {
   id: string;
@@ -34,10 +49,12 @@ export interface AppSettings {
   glassOpacity: number; // 0 to 1
   customBackground: string | null;
   screenEffect: ScreenEffectType;
+  noteColors: string[]; // Custom color palette
 }
 
 export interface AppState {
   todos: Todo[];
+  recurringRules: RecurringRule[];
   points: number;
   activePlantId: string;
   deathTime: number; // Timestamp

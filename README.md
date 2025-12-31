@@ -2,6 +2,16 @@
 
 一个将待办事项与植物养护相结合的创意应用，通过完成任务来养护虚拟植物，让生产力变得有趣而治愈。
 
+##  效果预览
+
+### 网页端
+
+![网页端效果图](./docs/img/bs_img.png)
+
+### 移动端
+
+![移动端效果图](./docs/img/mobile_img.png)
+
 ## ✨ 核心特性
 
 ### 🌿 植物养护机制
@@ -306,6 +316,54 @@ export const APP_CONFIG = {
 2. **特效切换**: 在设置中选择雨、雪、樱花等特效
 3. **壁纸更换**: 上传自定义图片作为桌面背景
 4. **历史查看**: 查看所有已完成任务的记录
+
+## 📰 News
+
+### 2025/12/31
+
+#### 🐞 修复
+
+* 修复创建待办时未添加子任务也可提交，导致待办无法正常完成的问题。
+* 修复已创建待办无法编辑的问题，并在便签右上角新增「编辑」入口。
+
+#### 🎨 调整
+
+* 字体更换为手写风格（偏可爱）。
+* 放大网页端右上角功能组的按钮及文字尺寸。
+* 优化「足迹」面板在移动端的展示效果。
+
+#### ✨ 新增
+
+* 新增 **自动待办**：支持自动创建周期性待办事项。
+* 新增 **便签颜色管理**。
+
+  * 与毛玻璃效果设置合并。
+  * 支持实时预览便签效果。
+  * **注：** 当前不支持调整 CSS 渐变的毛玻璃效果。
+
+  ![颜色管理](./docs/img/2025_12_31/color_settings.png)
+
+##### 渐变样式示例
+
+**100% 不透明度：**
+
+```
+linear-gradient(to top right, #f2a883, #fdc5a3, #f28ca7)
+linear-gradient(to top right, #9dc390, #d0eaa8, #ffc3cc)
+linear-gradient(to top right, #f2a191, #f4bbae, #c0e2d6)
+linear-gradient(to top right, #9bcc9a, #c4ddc5, #e2dcbb)
+linear-gradient(to top right, #efa0b1, #f7bac3, #fac9aa)
+```
+
+**80% 不透明度：**
+
+```
+linear-gradient(to top right, rgba(242,168,131,0.8), rgba(253,197,163,0.8), rgba(242,140,167,0.8))
+linear-gradient(to top right, rgba(157,195,144,0.8), rgba(208,234,168,0.8), rgba(255,195,204,0.8))
+linear-gradient(to top right, rgba(242,161,145,0.8), rgba(244,187,174,0.8), rgba(192,226,214,0.8))
+linear-gradient(to top right, rgba(155,204,154,0.8), rgba(196,221,197,0.8), rgba(226,220,187,0.8))
+linear-gradient(to top right, rgba(239,160,177,0.8), rgba(247,186,195,0.8), rgba(250,201,170,0.8))
+```
 
 ## 📄 许可证
 

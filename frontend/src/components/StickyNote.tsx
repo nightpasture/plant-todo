@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Todo, SubTask } from '../types';
-import { Check, Trash2, Zap } from 'lucide-react';
+import { Check, Trash2, Zap, Edit2, AlarmClock } from 'lucide-react';
 
 interface StickyNoteProps {
   todo: Todo;
@@ -12,9 +12,10 @@ interface StickyNoteProps {
   onDelete: (id: string) => void;
   onConvert: (todo: Todo, x: number, y: number) => void;
   onFocus: (id: string) => void;
+  onEdit: (todo: Todo) => void;
 }
 
-const StickyNote: React.FC<StickyNoteProps> = React.memo(({ todo, isMobile, isGlass, glassOpacity = 0.6, onUpdate, onDelete, onConvert, onFocus }) => {
+const StickyNote: React.FC<StickyNoteProps> = React.memo(({ todo, isMobile, isGlass, glassOpacity = 0.6, onUpdate, onDelete, onConvert, onFocus, onEdit }) => {
   const [isDragging, setIsDragging] = useState(false);
   
   // 根据当前设备环境选择对应的坐标
@@ -129,6 +130,11 @@ const StickyNote: React.FC<StickyNoteProps> = React.memo(({ todo, isMobile, isGl
     })
   , [todo.createdAt]);
 
+  const isOverdue = useMemo(() => {
+    if (!todo.dueDate || isAllCompleted || todo.isConverted) return false;
+    return Date.now() > todo.dueDate;
+  }, [todo.dueDate, isAllCompleted, todo.isConverted]);
+
   const alphaHex = useMemo(() => {
     const alpha = Math.round(glassOpacity * 255);
     return alpha.toString(16).padStart(2, '0');
@@ -137,7 +143,10 @@ const StickyNote: React.FC<StickyNoteProps> = React.memo(({ todo, isMobile, isGl
   const bgColor = useMemo(() => {
     const baseColor = todo.color || '#fff9c4';
     if (isGlass) {
-      return `${baseColor}${alphaHex}`;
+      if (baseColor.startsWith('#') && baseColor.length === 7) {
+        return `${baseColor}${alphaHex}`;
+      }
+      return baseColor; 
     }
     return baseColor;
   }, [todo.color, isGlass, alphaHex]);
@@ -157,17 +166,22 @@ const StickyNote: React.FC<StickyNoteProps> = React.memo(({ todo, isMobile, isGl
       style={{
         left: `${localPos.x}px`,
         top: `${localPos.y}px`,
-        backgroundColor: bgColor,
+        background: bgColor, // Use background instead of backgroundColor to support gradients
         zIndex: todo.zIndex || 10,
         transform: isDragging ? 'scale(1.05) rotate(0deg)' : `rotate(${(((todo.createdAt || 0) % 10) - 5) / 2}deg)`,
-        transition: isDragging ? 'none' : 'transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease'
+        transition: isDragging ? 'none' : 'transform 0.3s ease, background 0.3s ease, opacity 0.3s ease'
       }}
     >
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-lg font-bold cute-font text-gray-900 line-clamp-2 pr-2">{todo.title || '未命名任务'}</h3>
-        <button onClick={() => onDelete(todo.id)} className="p-1.5 hover:bg-black/5 rounded-full transition-colors text-gray-400 hover:text-red-500">
-          <Trash2 size={16} />
-        </button>
+        <h3 className="text-lg font-bold cute-font text-gray-900 line-clamp-2 pr-2 flex-1">{todo.title || '未命名任务'}</h3>
+        <div className="flex gap-1">
+          <button onClick={() => onEdit(todo)} className="p-1.5 hover:bg-black/5 rounded-full transition-colors text-gray-400 hover:text-indigo-500">
+            <Edit2 size={16} />
+          </button>
+          <button onClick={() => onDelete(todo.id)} className="p-1.5 hover:bg-black/5 rounded-full transition-colors text-gray-400 hover:text-red-500">
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
 
       <div className="space-y-3 mb-5 max-h-48 overflow-y-auto fancy-scroll pr-1">
@@ -182,7 +196,17 @@ const StickyNote: React.FC<StickyNoteProps> = React.memo(({ todo, isMobile, isGl
       </div>
 
       <div className="flex justify-between items-center pt-3 border-t border-black/5">
-        <span className="text-[10px] text-gray-500 font-mono opacity-60 tracking-tighter">{formattedTime}</span>
+        <div className="flex items-center gap-1 text-[12px] font-mono opacity-60 tracking-tighter">
+            {todo.isRecurring && <AlarmClock size={14} strokeWidth={2.5} />}
+            {formattedTime}
+        </div>
+        
+        {isOverdue && (
+           <div className="absolute bottom-3 right-4 bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded-full font-bold border border-red-200">
+             超期
+           </div>
+        )}
+
         {isAllCompleted && !todo.isConverted && (
           <button
             onClick={() => {

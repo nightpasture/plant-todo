@@ -168,12 +168,17 @@ export const PLANTS: PlantType[] = [
   }
 ];
 
-export const NOTE_COLORS = [
-  '#fff9c4', // Light Yellow
-  '#f8bbd0', // Light Pink
-  '#c8e6c9', // Light Green
-  '#e1f5fe', // Light Blue
-  '#f3e5f5', // Light Purple
+export const DEFAULT_NOTE_COLORS = [
+  '#F4E1E8', 
+  '#4F90F5', 
+  '#9FBEED', 
+  '#F3F6F2', 
+  '#6159A7', 
+  '#BBADEA', 
+  '#412C3C', 
+  '#98C3C9', 
+  '#433931', 
+  '#2D431A', 
 ];
 
 export const INITIAL_SURVIVAL_DAYS = 3;
